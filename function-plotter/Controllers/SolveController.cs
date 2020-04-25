@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using function_plotter.Models;
+using function_plotter.Solvers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace function_plotter.Controllers
@@ -14,36 +10,9 @@ namespace function_plotter.Controllers
     public class SolveController : ControllerBase
     {
         [HttpGet]
-        public IList<Pair> Get()
+        public IList<Pair> Get(FunctionPlotter functionPlotter)
         {
-            var response = new List<Pair>();
-            response.Add(new Pair(0, 1));
-            response.Add(new Pair(1, 2));
-            response.Add(new Pair(2, 3));
-            response.Add(new Pair(3, 4));
-            response.Add(new Pair(4, 5));
-
-            return response;
-        }
-
-        [HttpPost]
-        public IList<Pair> Post(FunctionPlotter functionPlotter)
-        {
-            var result = new List<Pair>();
-            var min = functionPlotter.Interval.X;
-            var max = functionPlotter.Interval.Y;
-           
-            for (double index = min; index < max; index += functionPlotter.Step)
-            {
-                result.Add(new Pair(index, ResolveFunction(functionPlotter.Function, index)));
-            }
-
-            return new List<Pair>();
-        }
-
-        private double ResolveFunction(Function function, double x)
-        {
-            return 0;
+            return new Solver(functionPlotter).Solve();
         }
     }
 }

@@ -25,5 +25,25 @@ namespace function_plotter.Controllers
 
             return response;
         }
+
+        [HttpPost]
+        public IList<Pair> Post(FunctionPlotter functionPlotter)
+        {
+            var result = new List<Pair>();
+            var min = functionPlotter.Interval.X;
+            var max = functionPlotter.Interval.Y;
+           
+            for (double index = min; index < max; index += functionPlotter.Step)
+            {
+                result.Add(new Pair(index, ResolveFunction(functionPlotter.Function, index)));
+            }
+
+            return new List<Pair>();
+        }
+
+        private double ResolveFunction(Function function, double x)
+        {
+            return 0;
+        }
     }
 }

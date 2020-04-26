@@ -17,7 +17,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range {Min = 0, Max = 5, Step = 1},
+                Range = new Range {LowerBound = 0, UpperBound = 5, Step = 1},
                 Function = new Function
                 {
                     Type = FunctionType.Addition, Args = new List<Function> {new Function(), new Function()}
@@ -50,7 +50,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { Min = 0, Max = 5, Step = 1 },
+                Range = new Range { LowerBound = 0, UpperBound = 5, Step = 1 },
                 Function = new Function
                 {
                     Type = FunctionType.Variable,
@@ -80,7 +80,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { Min = 0, Max = 5, Step = 1 },
+                Range = new Range { LowerBound = 0, UpperBound = 5, Step = 1 },
                 Function = new Function
                 {
                     Type = FunctionType.Constant,
@@ -111,7 +111,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { Min = 1, Max = 6, Step = 1 },
+                Range = new Range { LowerBound = 1, UpperBound = 6, Step = 1 },
                 Function = new Function
                 {
                     Type = FunctionType.Subtraction,
@@ -145,7 +145,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { Min = 1, Max = 6, Step = 1 },
+                Range = new Range { LowerBound = 1, UpperBound = 6, Step = 1 },
                 Function = new Function
                 {
                     Type = FunctionType.Multiplication,
@@ -179,7 +179,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { Min = 2, Max = 11, Step = 2 },
+                Range = new Range { LowerBound = 2, UpperBound = 11, Step = 2 },
                 Function = new Function
                 {
                     Type = FunctionType.Division,
@@ -213,7 +213,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { Min = 1, Max = 5, Step = 1 },
+                Range = new Range { LowerBound = 1, UpperBound = 5, Step = 1 },
                 Function = new Function
                 {
                     Type = FunctionType.Sine,
@@ -244,7 +244,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { Min = 1, Max = 5, Step = 1 },
+                Range = new Range { LowerBound = 1, UpperBound = 5, Step = 1 },
                 Function = new Function
                 {
                     Type = FunctionType.Cosine,
@@ -275,7 +275,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { Min = 1, Max = 6, Step = 1 },
+                Range = new Range { LowerBound = 1, UpperBound = 6, Step = 1 },
                 Function = new Function
                 {
                     Type = FunctionType.Power,

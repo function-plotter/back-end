@@ -18,7 +18,7 @@ namespace function_plotter.Solvers
         public List<Pair> Solve()
         {
             var results = new List<Pair>();
-            for (double x = _functionSolver.Range.Min; x < _functionSolver.Range.Max; x += _functionSolver.Range.Step)
+            for (double x = _functionSolver.Range.LowerBound; x < _functionSolver.Range.UpperBound; x += _functionSolver.Range.Step)
             {
                 var y = SolveForX(x, _functionSolver.Function);
                 results.Add(new Pair(x, y));

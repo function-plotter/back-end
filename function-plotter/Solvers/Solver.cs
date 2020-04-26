@@ -14,7 +14,6 @@ namespace function_plotter.Solvers
 
         public List<Pair> Solve()
         {
-            // facut ceva pentru functii, altceva pentru integrale ??
             return new List<Pair>();
         }
     }

@@ -2,8 +2,8 @@
 {
     public class Range
     {
-        public int Min { get; set; }
-        public int Max { get; set; }
+        public int LowerBound { get; set; }
+        public int UpperBound { get; set; }
         public double Step { get; set; }
     }
 }

@@ -9,8 +9,8 @@ namespace function_plotter.Controllers
     [ApiController]
     public class SolveController : ControllerBase
     {
-        [HttpGet]
-        public IList<Pair> Get(FunctionPlotter functionPlotter)
+        [HttpPost]
+        public IList<Pair> Post(FunctionPlotter functionPlotter)
         {
             return new Solver(functionPlotter).Solve();
         }

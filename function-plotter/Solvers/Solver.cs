@@ -83,5 +83,20 @@ namespace function_plotter.Solvers
                 return SolveForX(x, function.Args.ElementAt(0));
             }
         }
+
+        private double _computeIntegral(Function function, int precision)
+        {
+            var numberOfRectangles = precision;
+            var rectangleWidth = (_functionSolver.Range.UpperBound - _functionSolver.Range.LowerBound) / numberOfRectangles;
+            var result = 0.0;
+
+            for (int i = 0; i < numberOfRectangles; i++)
+            {
+                var x_i = _functionSolver.Range.LowerBound + (i - 1) * rectangleWidth;
+                result += rectangleWidth * SolveForX(x_i, function);
+            }
+
+            return result;
+        }
     }
 }

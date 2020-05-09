@@ -17,7 +17,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range {LowerBound = 0, UpperBound = 5, Step = 1},
+                Range = new Range {LowerBound = 0, UpperBound = 4, Step = 1},
                 Function = new Function
                 {
                     Type = FunctionType.Addition, Args = new List<Function> {new Function(), new Function()}
@@ -50,7 +50,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { LowerBound = 0, UpperBound = 5, Step = 1 },
+                Range = new Range { LowerBound = 0, UpperBound = 4, Step = 1 },
                 Function = new Function
                 {
                     Type = FunctionType.Variable,
@@ -80,7 +80,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { LowerBound = 0, UpperBound = 5, Step = 1 },
+                Range = new Range { LowerBound = 0, UpperBound = 4, Step = 1 },
                 Function = new Function
                 {
                     Type = FunctionType.Constant,
@@ -111,7 +111,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { LowerBound = 1, UpperBound = 6, Step = 1 },
+                Range = new Range { LowerBound = 1, UpperBound = 5, Step = 1 },
                 Function = new Function
                 {
                     Type = FunctionType.Subtraction,
@@ -145,7 +145,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { LowerBound = 1, UpperBound = 6, Step = 1 },
+                Range = new Range { LowerBound = 1, UpperBound = 5, Step = 1 },
                 Function = new Function
                 {
                     Type = FunctionType.Multiplication,
@@ -208,12 +208,12 @@ namespace function_plotter.Tests
         }
 
         [Test]
-        public void Should_Return_Sine_Of_Array_1_To_5()
+        public void Should_Return_Sine_Of_Array_1_To_4()
         {
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { LowerBound = 1, UpperBound = 5, Step = 1 },
+                Range = new Range { LowerBound = 1, UpperBound = 4, Step = 1 },
                 Function = new Function
                 {
                     Type = FunctionType.Sine,
@@ -239,12 +239,12 @@ namespace function_plotter.Tests
         }
 
         [Test]
-        public void Should_Return_Cosine_Of_Array_1_To_5()
+        public void Should_Return_Cosine_Of_Array_1_To_4()
         {
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { LowerBound = 1, UpperBound = 5, Step = 1 },
+                Range = new Range { LowerBound = 1, UpperBound = 4, Step = 1 },
                 Function = new Function
                 {
                     Type = FunctionType.Cosine,
@@ -275,7 +275,7 @@ namespace function_plotter.Tests
             // Given
             var functionPlotter = new FunctionPlotter
             {
-                Range = new Range { LowerBound = 1, UpperBound = 6, Step = 1 },
+                Range = new Range { LowerBound = 1, UpperBound = 5, Step = 1 },
                 Function = new Function
                 {
                     Type = FunctionType.Power,
@@ -298,6 +298,41 @@ namespace function_plotter.Tests
                 new Pair(3, 9),
                 new Pair(4, 16),
                 new Pair(5, 25),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_Array_From_1_5_Integral_2_4()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 10, Step = 2 },
+                Function = new Function
+                {
+                    Type = FunctionType.Integral,
+                    Range = new List<int> {2, 4},
+                    Args = new List<Function> { new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List<Pair> resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List<Pair>
+            {
+                new Pair(1, 1),
+                new Pair(2, 2),
+                new Pair(3, 3),
+                new Pair(4, 4),
+                new Pair(5, 5),
+                new Pair(7, 7),
+                new Pair(9, 9),
             };
 
             CollectionAssert.AreEqual(expectedList, resultList);

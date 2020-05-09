@@ -7,6 +7,8 @@ namespace function_plotter.Models
     {
         public string Type { get; set; }
         public IList<Function> Args { get; set; }
+        public IList<int> Range { get; set; }
         public double? Value { get; set; }
+
     }
 }

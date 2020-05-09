@@ -23,6 +23,20 @@ namespace function_plotter.Solvers
                 results.Add(new Pair(x, y));
             }
 
+            if (_functionSolver.Function.Type == FunctionType.Integral)
+            {
+                var integralRangeLowerBoundX = _functionSolver.Function.Range[0];
+                var integralRangeLowerBoundY = SolveForX(integralRangeLowerBoundX, _functionSolver.Function);
+                var integralRangeUpperBoundX = _functionSolver.Function.Range[1];
+                var integralRangeUpperBoundY = SolveForX(integralRangeUpperBoundX, _functionSolver.Function);
+
+                results.Add(new Pair(integralRangeLowerBoundX, integralRangeLowerBoundY));
+                results.Add(new Pair(integralRangeUpperBoundX, integralRangeUpperBoundY));
+
+                results = results.OrderBy(element => element.X).ToList();
+            }
+            
+
             return results;
         }
 
@@ -66,8 +80,23 @@ namespace function_plotter.Solvers
             }
             else
             {
-                return double.NaN; // This will be filled for Integrals
+                return SolveForX(x, function.Args.ElementAt(0));
             }
+        }
+
+        private double _computeIntegral(Function function, int precision)
+        {
+            var numberOfRectangles = precision;
+            var rectangleWidth = (_functionSolver.Range.UpperBound - _functionSolver.Range.LowerBound) / numberOfRectangles;
+            var result = 0.0;
+
+            for (int i = 0; i < numberOfRectangles; i++)
+            {
+                var x_i = _functionSolver.Range.LowerBound + (i - 1) * rectangleWidth;
+                result += rectangleWidth * SolveForX(x_i, function);
+            }
+
+            return result;
         }
     }
 }

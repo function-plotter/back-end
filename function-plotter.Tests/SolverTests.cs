@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using function_plotter.Models;
 using function_plotter.Solvers;
 using NUnit.Framework;
 using static System.Math;
+using Range = function_plotter.Models.Range;
 
 namespace function_plotter.Tests
 {
@@ -336,6 +339,176 @@ namespace function_plotter.Tests
             };
 
             CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_0_25_Integral_0_To_1_From_x_Power_3()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 0, UpperBound = 1},
+                Function = new Function
+                {
+                    Type = FunctionType.Integral,
+                    Args = new List<Function> { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Power;
+            functionPlotter.Function.Args.ElementAt(0).Args = new List<Function> { new Function(), new Function() };
+            functionPlotter.Function.Args.ElementAt(0).Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(0).Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(0).Args.ElementAt(1).Value = 3;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            var result = solver.ComputeIntegral(functionPlotter.Function, 1000000);
+
+            // Then
+            var expectedResult = 0.25;
+
+            Assert.Less(expectedResult - result, 0.001);
+        }
+
+        [Test]
+        public void Should_Return_Infinity_Division_By_0()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 2, UpperBound = 11, Step = 2 },
+                Function = new Function
+                {
+                    Type = FunctionType.Division,
+                    Args = new List<Function> { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(1).Value = 0;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List<Pair> resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List<Pair>
+            {
+                new Pair(2, Double.PositiveInfinity),
+                new Pair(4, Double.PositiveInfinity),
+                new Pair(6, Double.PositiveInfinity),
+                new Pair(8, Double.PositiveInfinity),
+                new Pair(10, Double.PositiveInfinity),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_Array_Of_1_From_0_4_Power_By_0()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 0, UpperBound = 4, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Power,
+                    Args = new List<Function> { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(1).Value = 0;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List<Pair> resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List<Pair>
+            {
+                new Pair(0, 1),
+                new Pair(1, 1),
+                new Pair(2, 1),
+                new Pair(3, 1),
+                new Pair(4, 1),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_0_From_0_Power_By_2()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 0, UpperBound = 0, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Power,
+                    Args = new List<Function> { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(1).Value = 1;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List<Pair> resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List<Pair>
+            {
+                new Pair(0, 0)
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Timeout_For_Step_0()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 0, UpperBound = 1, Step = 0 },
+                Function = new Function
+                {
+                    Type = FunctionType.Variable,
+                }
+            };
+            var solver = new Solver(functionPlotter);
+
+            // When
+            var task = Task.Run(() => solver.Solve());
+            var completedInTime = task.Wait(5000);
+
+            // Then
+            Assert.AreEqual(completedInTime, false);
+        }
+
+        [Test]
+        public void Should_Return_Empty_For_LowerBound_Grater_Than_UpperBound()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 10, UpperBound = -1, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Variable,
+                }
+            };
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List<Pair> resultList = solver.Solve();
+
+            // Then
+            Assert.IsEmpty(resultList);
         }
     }
 }

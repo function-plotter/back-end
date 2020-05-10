@@ -84,10 +84,10 @@ namespace function_plotter.Solvers
             }
         }
 
-        private double _computeIntegral(Function function, int precision)
+        public double ComputeIntegral(Function function, int precision)
         {
             var numberOfRectangles = precision;
-            var rectangleWidth = (_functionSolver.Range.UpperBound - _functionSolver.Range.LowerBound) / numberOfRectangles;
+            var rectangleWidth = (_functionSolver.Range.UpperBound * 1.0d - _functionSolver.Range.LowerBound) / numberOfRectangles * 1.0d;
             var result = 0.0;
 
             for (int i = 0; i < numberOfRectangles; i++)

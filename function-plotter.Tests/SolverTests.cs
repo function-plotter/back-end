@@ -370,7 +370,7 @@ namespace function_plotter.Tests
         }
 
         [Test]
-        public void Should_Return_Exception_Division_By_0()
+        public void Should_Return_Infinity_Division_By_0()
         {
             // Given
             var functionPlotter = new FunctionPlotter
@@ -398,6 +398,40 @@ namespace function_plotter.Tests
                 new Pair(6, Double.PositiveInfinity),
                 new Pair(8, Double.PositiveInfinity),
                 new Pair(10, Double.PositiveInfinity),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_Array_Of_1_From_1_5_Power_By_0()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 5, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Power,
+                    Args = new List<Function> { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(1).Value = 0;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List<Pair> resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List<Pair>
+            {
+                new Pair(1, 1),
+                new Pair(2, 1),
+                new Pair(3, 1),
+                new Pair(4, 1),
+                new Pair(5, 1),
             };
 
             CollectionAssert.AreEqual(expectedList, resultList);

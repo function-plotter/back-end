@@ -337,5 +337,34 @@ namespace function_plotter.Tests
 
             CollectionAssert.AreEqual(expectedList, resultList);
         }
+
+        [Test]
+        public void Should_Return_0_25_Integral_0_To_1_From_x_Power_3()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 0, UpperBound = 1},
+                Function = new Function
+                {
+                    Type = FunctionType.Integral,
+                    Args = new List<Function> { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Power;
+            functionPlotter.Function.Args.ElementAt(0).Args = new List<Function> { new Function(), new Function() };
+            functionPlotter.Function.Args.ElementAt(0).Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(0).Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(0).Args.ElementAt(1).Value = 3;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            var result = solver.ComputeIntegral(functionPlotter.Function, 1000000);
+
+            // Then
+            var expectedResult = 0.25;
+
+            Assert.Less(expectedResult - result, 0.001);
+        }
     }
 }

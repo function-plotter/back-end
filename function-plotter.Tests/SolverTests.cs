@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using function_plotter.Models;
 using function_plotter.Solvers;
 using NUnit.Framework;
 using static System.Math;
+using Range = function_plotter.Models.Range;
 
 namespace function_plotter.Tests
 {
@@ -365,6 +367,40 @@ namespace function_plotter.Tests
             var expectedResult = 0.25;
 
             Assert.Less(expectedResult - result, 0.001);
+        }
+
+        [Test]
+        public void Should_Return_Exception_Division_By_0()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 2, UpperBound = 11, Step = 2 },
+                Function = new Function
+                {
+                    Type = FunctionType.Division,
+                    Args = new List<Function> { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(1).Value = 0;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List<Pair> resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List<Pair>
+            {
+                new Pair(2, Double.PositiveInfinity),
+                new Pair(4, Double.PositiveInfinity),
+                new Pair(6, Double.PositiveInfinity),
+                new Pair(8, Double.PositiveInfinity),
+                new Pair(10, Double.PositiveInfinity),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
         }
     }
 }

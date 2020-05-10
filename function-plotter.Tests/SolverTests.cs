@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using function_plotter.Models;
 using function_plotter.Solvers;
 using NUnit.Framework;
@@ -465,6 +466,49 @@ namespace function_plotter.Tests
             };
 
             CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Timeout_For_Step_0()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 0, UpperBound = 1, Step = 0 },
+                Function = new Function
+                {
+                    Type = FunctionType.Variable,
+                }
+            };
+            var solver = new Solver(functionPlotter);
+
+            // When
+            var task = Task.Run(() => solver.Solve());
+            var completedInTime = task.Wait(5000);
+
+            // Then
+            Assert.AreEqual(completedInTime, false);
+        }
+
+        [Test]
+        public void Should_Return_Empty_For_LowerBound_Grater_Than_UpperBound()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 10, UpperBound = -1, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Variable,
+                }
+            };
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List<Pair> resultList = solver.Solve();
+
+            // Then
+            Assert.IsEmpty(resultList);
         }
     }
 }

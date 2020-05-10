@@ -143,5 +143,64 @@ namespace function_plotter.Tests
 
             Assert.IsFalse(validationResult.IsValid);
         }
+
+        [Test]
+        public void Should_Validate_If_Integral_Is_Correct()
+        {
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 6, Step = 0.1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Integral,
+                    Range = new List<int> { 2, 4 },
+                    Args = new List<Function>
+                    {
+                        new Function
+                        {
+                            Type = FunctionType.Constant,
+                            Value = 2
+                        },
+                        new Function
+                        {
+                            Type = FunctionType.Variable
+                        }
+                    }
+                }
+            };
+
+            var validationResult = _validator.Validate(functionPlotter);
+
+            Assert.IsTrue(validationResult.IsValid);
+        }
+
+        [Test]
+        public void Should_Validate_If_Function_Plotter_Is_Correct()
+        {
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 6, Step = 0.1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Addition,
+                    Args = new List<Function>
+                    {
+                        new Function
+                        {
+                            Type = FunctionType.Constant,
+                            Value = 2
+                        },
+                        new Function
+                        {
+                            Type = FunctionType.Variable
+                        }
+                    }
+                }
+            };
+
+            var validationResult = _validator.Validate(functionPlotter);
+
+            Assert.IsTrue(validationResult.IsValid);
+        }
     }
 }

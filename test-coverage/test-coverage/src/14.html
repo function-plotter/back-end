@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\Petru\Desktop\back-end\function-plotter.Tests\ValidatorTests.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using function_plotter.Models;
+using function_plotter.Validators;
+using NUnit.Framework;
+using System.Collections.Generic;
+using Range = function_plotter.Models.Range;
+
+namespace function_plotter.Tests
+{
+    [TestFixture]
+    public class ValidatorTests
+    {
+        private FunctionPlotterValidator _validator;
+
+        [SetUp]
+        public void Init()
+        {
+            _validator = new FunctionPlotterValidator();
+        }
+
+        [Test]
+        public void Should_Invalidate_If_Object_Is_Null()
+        {
+            var functionPlotter = new FunctionPlotter();
+
+            var validationResult = _validator.Validate(functionPlotter);
+
+            Assert.IsFalse(validationResult.IsValid);
+        }
+
+        [Test]
+        public void Should_Invalidate_If_Function_Is_Null()
+        {
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 2, Step = 0.2}
+            };
+
+            var validationResult = _validator.Validate(functionPlotter);
+
+            Assert.IsFalse(validationResult.IsValid);
+        }
+
+        [Test]
+        public void Should_Invalidate_If_Range_Is_Null()
+        {
+            var functionPlotter = new FunctionPlotter
+            {
+                Function = new Function
+                {
+                    Type = FunctionType.Constant,
+                    Value = 3
+                },
+            };
+
+            var validationResult = _validator.Validate(functionPlotter);
+
+            Assert.IsFalse(validationResult.IsValid);
+        }
+
+        [Test]
+        public void Should_Invalidate_If_Step_Is_Negative()
+        {
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 6, Step = -1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Power,
+                    Args = new List&lt;Function&gt;
+                    {
+                        new Function
+                        {
+                            Type = FunctionType.Constant,
+                            Value = 2
+                        },
+                        new Function
+                        {
+                            Type = FunctionType.Variable
+                        }
+                    }
+                }
+            };
+
+            var validationResult = _validator.Validate(functionPlotter);
+
+            Assert.IsFalse(validationResult.IsValid);
+        }
+
+        [Test]
+        public void Should_Invalidate_If_Step_Is_0()
+        {
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 6, Step = 0 },
+                Function = new Function
+                {
+                    Type = FunctionType.Power,
+                    Args = new List&lt;Function&gt;
+                    {
+                        new Function
+                        {
+                            Type = FunctionType.Constant,
+                            Value = 2
+                        },
+                        new Function
+                        {
+                            Type = FunctionType.Variable
+                        }
+                    }
+                }
+            };
+
+            var validationResult = new FunctionPlotterValidator().Validate(functionPlotter);
+
+            Assert.IsFalse(validationResult.IsValid);
+        }
+
+        [Test]
+        public void Should_Invalidate_If_Integral_Function_Has_No_Range()
+        {
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 6, Step = 0 },
+                Function = new Function
+                {
+                    Type = FunctionType.Integral,
+                    Args = new List&lt;Function&gt;
+                    {
+                        new Function
+                        {
+                            Type = FunctionType.Constant,
+                            Value = 2
+                        },
+                        new Function
+                        {
+                            Type = FunctionType.Variable
+                        }
+                    }
+                }
+            };
+
+            var validationResult = _validator.Validate(functionPlotter);
+
+            Assert.IsFalse(validationResult.IsValid);
+        }
+
+        [Test]
+        public void Should_Validate_If_Integral_Is_Correct()
+        {
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 6, Step = 0.1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Integral,
+                    Range = new List&lt;int&gt; { 2, 4 },
+                    Args = new List&lt;Function&gt;
+                    {
+                        new Function
+                        {
+                            Type = FunctionType.Constant,
+                            Value = 2
+                        },
+                        new Function
+                        {
+                            Type = FunctionType.Variable
+                        }
+                    }
+                }
+            };
+
+            var validationResult = _validator.Validate(functionPlotter);
+
+            Assert.IsTrue(validationResult.IsValid);
+        }
+
+        [Test]
+        public void Should_Validate_If_Function_Plotter_Is_Correct()
+        {
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 6, Step = 0.1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Addition,
+                    Args = new List&lt;Function&gt;
+                    {
+                        new Function
+                        {
+                            Type = FunctionType.Constant,
+                            Value = 2
+                        },
+                        new Function
+                        {
+                            Type = FunctionType.Variable
+                        }
+                    }
+                }
+            };
+
+            var validationResult = _validator.Validate(functionPlotter);
+
+            Assert.IsTrue(validationResult.IsValid);
+        }
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[16,9,16,10,1],[17,13,17,57,1],[18,9,18,10,1],[22,9,22,10,1],[23,13,23,57,1],[25,13,25,73,1],[27,13,27,54,1],[28,9,28,10,1],[32,9,32,10,1],[33,13,36,15,1],[38,13,38,73,1],[40,13,40,54,1],[41,9,41,10,1],[45,9,45,10,1],[46,13,53,15,1],[55,13,55,73,1],[57,13,57,54,1],[58,9,58,10,1],[62,9,62,10,1],[63,13,82,15,1],[84,13,84,73,1],[86,13,86,54,1],[87,9,87,10,1],[91,9,91,10,1],[92,13,111,15,1],[113,13,113,93,1],[115,13,115,54,1],[116,9,116,10,1],[120,9,120,10,1],[121,13,140,15,1],[142,13,142,73,1],[144,13,144,54,1],[145,9,145,10,1],[149,9,149,10,1],[150,13,170,15,1],[172,13,172,73,1],[174,13,174,53,1],[175,9,175,10,1],[179,9,179,10,1],[180,13,199,15,1],[201,13,201,73,1],[203,13,203,53,1],[204,9,204,10,1]]);
+    </script>
+  </body>
+</html>

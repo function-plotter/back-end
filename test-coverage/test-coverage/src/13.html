@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\Petru\Desktop\back-end\function-plotter.Tests\SolverTests.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using function_plotter.Models;
+using function_plotter.Solvers;
+using NUnit.Framework;
+using static System.Math;
+using Range = function_plotter.Models.Range;
+
+namespace function_plotter.Tests
+{
+    [TestFixture]
+    class SolverTests
+    {
+        [Test]
+        public void Should_Return_Array_From_0_4_To_1_5_Addition_By_1()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range {LowerBound = 0, UpperBound = 4, Step = 1},
+                Function = new Function
+                {
+                    Type = FunctionType.Addition, Args = new List&lt;Function&gt; {new Function(), new Function()}
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(1).Value = 1;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List&lt;Pair&gt; resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List&lt;Pair&gt;
+            {
+                new Pair(0, 1),
+                new Pair(1, 2),
+                new Pair(2, 3),
+                new Pair(3, 4),
+                new Pair(4, 5),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_Array_From_0_4_To_0_4_Variable()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 0, UpperBound = 4, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Variable,
+                }
+            };
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List&lt;Pair&gt; resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List&lt;Pair&gt;
+            {
+                new Pair(0, 0),
+                new Pair(1, 1),
+                new Pair(2, 2),
+                new Pair(3, 3),
+                new Pair(4, 4),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_Array_Of_7_Constant()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 0, UpperBound = 4, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Constant,
+                    Value = 7
+                }
+            };
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List&lt;Pair&gt; resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List&lt;Pair&gt;
+            {
+                new Pair(0, 7),
+                new Pair(1, 7),
+                new Pair(2, 7),
+                new Pair(3, 7),
+                new Pair(4, 7),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_Array_From_1_5_To_0_4_Subtraction_By_1()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 5, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Subtraction,
+                    Args = new List&lt;Function&gt; { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(1).Value = 1;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List&lt;Pair&gt; resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List&lt;Pair&gt;
+            {
+                new Pair(1, 0),
+                new Pair(2, 1),
+                new Pair(3, 2),
+                new Pair(4, 3),
+                new Pair(5, 4),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_Array_From_1_5_To_2_10_Multiply_By_2()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 5, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Multiplication,
+                    Args = new List&lt;Function&gt; { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(1).Value = 2;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List&lt;Pair&gt; resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List&lt;Pair&gt;
+            {
+                new Pair(1, 2),
+                new Pair(2, 4),
+                new Pair(3, 6),
+                new Pair(4, 8),
+                new Pair(5, 10),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_Array_From_1_5_To_0dot5_2dot5_Division_By_2()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 2, UpperBound = 11, Step = 2 },
+                Function = new Function
+                {
+                    Type = FunctionType.Division,
+                    Args = new List&lt;Function&gt; { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(1).Value = 2;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List&lt;Pair&gt; resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List&lt;Pair&gt;
+            {
+                new Pair(2, 1),
+                new Pair(4, 2),
+                new Pair(6, 3),
+                new Pair(8, 4),
+                new Pair(10, 5),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_Sine_Of_Array_1_To_4()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 4, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Sine,
+                    Args = new List&lt;Function&gt; { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List&lt;Pair&gt; resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List&lt;Pair&gt;
+            {
+                new Pair(1, Sin(1)),
+                new Pair(2, Sin(2)),
+                new Pair(3, Sin(3)),
+                new Pair(4, Sin(4)),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_Cosine_Of_Array_1_To_4()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 4, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Cosine,
+                    Args = new List&lt;Function&gt; { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List&lt;Pair&gt; resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List&lt;Pair&gt;
+            {
+                new Pair(1, Cos(1)),
+                new Pair(2, Cos(2)),
+                new Pair(3, Cos(3)),
+                new Pair(4, Cos(4)),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_Array_From_1_5_Power_By_2()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 5, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Power,
+                    Args = new List&lt;Function&gt; { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(1).Value = 2;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List&lt;Pair&gt; resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List&lt;Pair&gt;
+            {
+                new Pair(1, 1),
+                new Pair(2, 4),
+                new Pair(3, 9),
+                new Pair(4, 16),
+                new Pair(5, 25),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_Array_From_1_5_Integral_2_4()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 10, Step = 2 },
+                Function = new Function
+                {
+                    Type = FunctionType.Integral,
+                    Range = new List&lt;int&gt; {2, 4},
+                    Args = new List&lt;Function&gt; { new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List&lt;Pair&gt; resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List&lt;Pair&gt;
+            {
+                new Pair(1, 1),
+                new Pair(2, 2),
+                new Pair(3, 3),
+                new Pair(4, 4),
+                new Pair(5, 5),
+                new Pair(7, 7),
+                new Pair(9, 9),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_0_25_Integral_0_To_1_From_x_Power_3()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 0, UpperBound = 1},
+                Function = new Function
+                {
+                    Type = FunctionType.Integral,
+                    Args = new List&lt;Function&gt; { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Power;
+            functionPlotter.Function.Args.ElementAt(0).Args = new List&lt;Function&gt; { new Function(), new Function() };
+            functionPlotter.Function.Args.ElementAt(0).Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(0).Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(0).Args.ElementAt(1).Value = 3;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            var result = solver.ComputeIntegral(functionPlotter.Function, 1000000);
+
+            // Then
+            var expectedResult = 0.25;
+
+            Assert.Less(expectedResult - result, 0.001);
+        }
+
+        [Test]
+        public void Should_Return_Infinity_Division_By_0()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 2, UpperBound = 11, Step = 2 },
+                Function = new Function
+                {
+                    Type = FunctionType.Division,
+                    Args = new List&lt;Function&gt; { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(1).Value = 0;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List&lt;Pair&gt; resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List&lt;Pair&gt;
+            {
+                new Pair(2, Double.PositiveInfinity),
+                new Pair(4, Double.PositiveInfinity),
+                new Pair(6, Double.PositiveInfinity),
+                new Pair(8, Double.PositiveInfinity),
+                new Pair(10, Double.PositiveInfinity),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_Array_Of_1_From_0_4_Power_By_0()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 0, UpperBound = 4, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Power,
+                    Args = new List&lt;Function&gt; { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(1).Value = 0;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List&lt;Pair&gt; resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List&lt;Pair&gt;
+            {
+                new Pair(0, 1),
+                new Pair(1, 1),
+                new Pair(2, 1),
+                new Pair(3, 1),
+                new Pair(4, 1),
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Return_0_From_0_Power_By_2()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 0, UpperBound = 0, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Power,
+                    Args = new List&lt;Function&gt; { new Function(), new Function() }
+                }
+            };
+            functionPlotter.Function.Args.ElementAt(0).Type = FunctionType.Variable;
+            functionPlotter.Function.Args.ElementAt(1).Type = FunctionType.Constant;
+            functionPlotter.Function.Args.ElementAt(1).Value = 1;
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List&lt;Pair&gt; resultList = solver.Solve();
+
+            // Then
+            var expectedList = new List&lt;Pair&gt;
+            {
+                new Pair(0, 0)
+            };
+
+            CollectionAssert.AreEqual(expectedList, resultList);
+        }
+
+        [Test]
+        public void Should_Timeout_For_Step_0()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 0, UpperBound = 1, Step = 0 },
+                Function = new Function
+                {
+                    Type = FunctionType.Variable,
+                }
+            };
+            var solver = new Solver(functionPlotter);
+
+            // When
+            var task = Task.Run(() =&gt; solver.Solve());
+            var completedInTime = task.Wait(5000);
+
+            // Then
+            Assert.AreEqual(completedInTime, false);
+        }
+
+        [Test]
+        public void Should_Return_Empty_For_LowerBound_Grater_Than_UpperBound()
+        {
+            // Given
+            var functionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 10, UpperBound = -1, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Variable,
+                }
+            };
+            var solver = new Solver(functionPlotter);
+
+            // When
+            List&lt;Pair&gt; resultList = solver.Solve();
+
+            // Then
+            Assert.IsEmpty(resultList);
+        }
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[19,9,19,10,1],[21,13,28,15,1],[29,13,29,85,1],[30,13,30,85,1],[31,13,31,66,1],[32,13,32,54,1],[35,13,35,52,1],[38,13,45,15,1],[47,13,47,65,1],[48,9,48,10,1],[52,9,52,10,1],[54,13,61,15,1],[62,13,62,54,1],[65,13,65,52,1],[68,13,75,15,1],[77,13,77,65,1],[78,9,78,10,1],[82,9,82,10,1],[84,13,92,15,1],[93,13,93,54,1],[96,13,96,52,1],[99,13,106,15,1],[108,13,108,65,1],[109,9,109,10,1],[113,9,113,10,1],[115,13,123,15,1],[124,13,124,85,1],[125,13,125,85,1],[126,13,126,66,1],[127,13,127,54,1],[130,13,130,52,1],[133,13,140,15,1],[142,13,142,65,1],[143,9,143,10,1],[147,9,147,10,1],[149,13,157,15,1],[158,13,158,85,1],[159,13,159,85,1],[160,13,160,66,1],[161,13,161,54,1],[164,13,164,52,1],[167,13,174,15,1],[176,13,176,65,1],[177,9,177,10,1],[181,9,181,10,1],[183,13,191,15,1],[192,13,192,85,1],[193,13,193,85,1],[194,13,194,66,1],[195,13,195,54,1],[198,13,198,52,1],[201,13,208,15,1],[210,13,210,65,1],[211,9,211,10,1],[215,9,215,10,1],[217,13,225,15,1],[226,13,226,85,1],[227,13,227,54,1],[230,13,230,52,1],[233,13,239,15,1],[241,13,241,65,1],[242,9,242,10,1],[246,9,246,10,1],[248,13,256,15,1],[257,13,257,85,1],[258,13,258,54,1],[261,13,261,52,1],[264,13,270,15,1],[272,13,272,65,1],[273,9,273,10,1],[277,9,277,10,1],[279,13,287,15,1],[288,13,288,85,1],[289,13,289,85,1],[290,13,290,66,1],[291,13,291,54,1],[294,13,294,52,1],[297,13,304,15,1],[306,13,306,65,1],[307,9,307,10,1],[311,9,311,10,1],[313,13,322,15,1],[323,13,323,85,1],[324,13,324,54,1],[327,13,327,52,1],[330,13,339,15,1],[341,13,341,65,1],[342,9,342,10,1],[346,9,346,10,1],[348,13,356,15,1],[357,13,357,82,1],[358,13,358,117,1],[359,13,359,103,1],[360,13,360,103,1],[361,13,361,84,1],[362,13,362,54,1],[365,13,365,84,1],[368,13,368,39,1],[370,13,370,57,1],[371,9,371,10,1],[375,9,375,10,1],[377,13,385,15,1],[386,13,386,85,1],[387,13,387,85,1],[388,13,388,66,1],[389,13,389,54,1],[392,13,392,52,1],[395,13,402,15,1],[404,13,404,65,1],[405,9,405,10,1],[409,9,409,10,1],[411,13,419,15,1],[420,13,420,85,1],[421,13,421,85,1],[422,13,422,66,1],[423,13,423,54,1],[426,13,426,52,1],[429,13,436,15,1],[438,13,438,65,1],[439,9,439,10,1],[443,9,443,10,1],[445,13,453,15,1],[454,13,454,85,1],[455,13,455,85,1],[456,13,456,66,1],[457,13,457,54,1],[460,13,460,52,1],[463,13,466,15,1],[468,13,468,65,1],[469,9,469,10,1],[473,9,473,10,1],[475,13,482,15,1],[483,13,483,54,1],[486,13,486,39,1],[486,39,486,53,1],[486,53,486,55,1],[486,13,486,55,1],[487,13,487,51,1],[490,13,490,53,1],[491,9,491,10,1],[495,9,495,10,1],[497,13,504,15,1],[505,13,505,54,1],[508,13,508,52,1],[511,13,511,40,1],[512,9,512,10,1]]);
+    </script>
+  </body>
+</html>

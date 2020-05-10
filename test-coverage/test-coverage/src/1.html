@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>C:\Users\Petru\Desktop\back-end\function-plotter.Tests\SolveControllerTests.cs</title>
+    <script type="text/javascript" src="../js/dotcover.sourceview.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/dotcover.report.css" />
+  </head>
+  <body>
+    <pre id="content" class="source-code">
+using function_plotter.Controllers;
+using function_plotter.Models;
+using Microsoft.AspNetCore.Mvc;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Net;
+using Range = function_plotter.Models.Range;
+
+namespace function_plotter.Tests
+{
+    [TestFixture]
+    class SolveControllerTests
+    {
+        private FunctionPlotter _goodFunctionPlotter;
+
+        private FunctionPlotter _badFunctionPlotter;
+
+        #region INIT
+
+        [SetUp]
+        public void Init()
+        {
+            _goodFunctionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 6, Step = 1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Power,
+                    Args = new List&lt;Function&gt;
+                    {
+                        new Function
+                        {
+                            Type = FunctionType.Constant,
+                            Value = 2
+                        },
+                        new Function
+                        {
+                            Type = FunctionType.Variable
+                        }
+                    }
+                }
+            };
+
+            _badFunctionPlotter = new FunctionPlotter
+            {
+                Range = new Range { LowerBound = 1, UpperBound = 6, Step = -1 },
+                Function = new Function
+                {
+                    Type = FunctionType.Integral,
+                    Args = new List&lt;Function&gt;
+                    {
+                        new Function
+                        {
+                            Type = FunctionType.Constant,
+                            Value = 2
+                        },
+                        new Function
+                        {
+                            Type = FunctionType.Variable
+                        }
+                    }
+                }
+            };
+        }
+
+        #endregion
+
+        [Test]
+        public void Post_Returns_Ok()
+        {
+            var controller = new SolveController();
+
+            var result = (ObjectResult)controller.Post(_goodFunctionPlotter);
+
+            Assert.AreEqual((int)HttpStatusCode.OK, result.StatusCode);
+        }
+
+        [Test]
+        public void Post_Return_Type_Is_Proper()
+        {
+            var controller = new SolveController();
+
+            var result = (ObjectResult)controller.Post(_goodFunctionPlotter);
+
+            Assert.IsInstanceOf(typeof(List&lt;Pair&gt;), result.Value);
+        }
+
+        [Test]
+        public void Post_Return_BadRequest()
+        {
+            var controller = new SolveController();
+
+            var result = (ObjectResult)controller.Post(_badFunctionPlotter);
+
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, result.StatusCode);
+        }
+    }
+}
+
+    </pre>
+    <script type="text/javascript">
+      highlightRanges([[22,9,22,10,1],[23,13,42,15,1],[44,13,63,15,1],[64,9,64,10,1],[70,9,70,10,1],[71,13,71,52,1],[73,13,73,78,1],[75,13,75,72,1],[76,9,76,10,1],[80,9,80,10,1],[81,13,81,52,1],[83,13,83,78,1],[85,13,85,67,1],[86,9,86,10,1],[90,9,90,10,1],[91,13,91,52,1],[93,13,93,77,1],[95,13,95,80,1],[96,9,96,10,1]]);
+    </script>
+  </body>
+</html>

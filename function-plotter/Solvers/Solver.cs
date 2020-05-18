@@ -1,5 +1,7 @@
+using System;
 using function_plotter.Models;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using static System.Math;
 
@@ -64,7 +66,12 @@ namespace function_plotter.Solvers
             }
             else if (function.Type == FunctionType.Division)
             {
-                return SolveForX(x, function.Args.ElementAt(0)) / SolveForX(x, function.Args.ElementAt(1));
+                var rightExpression = SolveForX(x, function.Args.ElementAt(1));
+                var leftExpression = SolveForX(x, function.Args.ElementAt(0));
+
+                Trace.Assert(rightExpression != 0, "Division by 0 not allowed!");
+
+                return leftExpression / rightExpression;
             }
             else if (function.Type == FunctionType.Sine)
             {

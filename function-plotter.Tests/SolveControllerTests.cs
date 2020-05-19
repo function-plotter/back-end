@@ -25,7 +25,7 @@ namespace function_plotter.Tests
                 Range = new Range { LowerBound = 1, UpperBound = 6, Step = 1 },
                 Function = new Function
                 {
-                    Type = FunctionType.Power,
+                    Type = FunctionType.Division,
                     Args = new List<Function>
                     {
                         new Function
@@ -91,6 +91,17 @@ namespace function_plotter.Tests
             var controller = new SolveController();
 
             var result = (ObjectResult)controller.Post(_badFunctionPlotter);
+
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
+        [Test]
+        public void Post_Return_BadRequest_DivisionBy0()
+        {
+            var controller = new SolveController();
+
+            _goodFunctionPlotter.Range.LowerBound = -1;
+            var result = (ObjectResult)controller.Post(_goodFunctionPlotter);
 
             Assert.AreEqual((int)HttpStatusCode.BadRequest, result.StatusCode);
         }

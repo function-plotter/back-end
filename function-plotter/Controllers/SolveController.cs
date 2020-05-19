@@ -33,7 +33,13 @@ namespace function_plotter.Controllers
                 return BadRequest(message);
             }
 
-            var result = new Solver(functionPlotter).Solve();
+            var solver = new Solver(functionPlotter);
+            var result = solver.Solve();
+
+            if (!string.IsNullOrEmpty(solver.Error))
+            {
+                return BadRequest(solver.Error);
+            }
             
             return Ok(result);
         }

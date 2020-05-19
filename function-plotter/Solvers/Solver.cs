@@ -11,6 +11,10 @@ namespace function_plotter.Solvers
     {
         private readonly FunctionPlotter _functionSolver;
 
+        private const string DivisionByZeroMessage = "Division by 0 not allowed!";
+
+        public string Error { get; set; }
+
         public Solver(FunctionPlotter functionPlotter)
         {
             _functionSolver = functionPlotter;
@@ -69,7 +73,13 @@ namespace function_plotter.Solvers
                 var rightExpression = SolveForX(x, function.Args.ElementAt(1));
                 var leftExpression = SolveForX(x, function.Args.ElementAt(0));
 
-                Trace.Assert(rightExpression != 0, "Division by 0 not allowed!");
+                Trace.Assert(rightExpression != 0, DivisionByZeroMessage);
+
+                if (rightExpression == 0)
+                {
+                    Error = DivisionByZeroMessage;
+                    return double.NaN;
+                }
 
                 return leftExpression / rightExpression;
             }

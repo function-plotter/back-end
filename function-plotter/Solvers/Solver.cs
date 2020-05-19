@@ -97,6 +97,7 @@ namespace function_plotter.Solvers
             }
             else
             {
+                Trace.Assert(function.Type == FunctionType.Integral, "Invalid operation type!");
                 return SolveForX(x, function.Args.ElementAt(0));
             }
         }
